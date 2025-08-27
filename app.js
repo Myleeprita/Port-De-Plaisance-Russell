@@ -5,6 +5,7 @@ const path = require('path');
 
 const app = express();
 
+// Charge Environnement
 dotenv.config();
 
 // MongoDB Connect
@@ -27,3 +28,17 @@ app.use((err, req, res, next) => {
 
 // Exploitation du dossier public pour les fichiers statiques ( css, img, etc )
 app.use(express.static('public'));
+
+// Accueil EJS
+app.get('/', async (req, res) => {
+    try {
+        const users = await userModel.find();
+        res.render('index', { users });
+    } catch (err) {
+        res.status(500).send('Erreur serveur');
+    }
+});
+
+// Lancer Serveur
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`Le serveur ce lance sur le port ${PORT}`));
