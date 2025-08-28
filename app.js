@@ -2,6 +2,9 @@ const express = require('express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const path = require('path');
+const userRoutes = require('./routes/userRoutes');
+const userModel = require('./models/userModel');
+const session = require('express-session');
 
 const app = express();
 
@@ -25,6 +28,13 @@ app.use((err, req, res, next) => {
     console.error(err.stack);
     res.status(500).json({ message: 'Erreur serveur' });
 });
+
+// Middleware de session
+app.use(session({
+  secret: "monSuperSecret",
+  resave: false,
+  saveUninitialized: true
+}));
 
 // Exploitation du dossier public pour les fichiers statiques ( css, img, etc )
 app.use(express.static('public'));
