@@ -36,6 +36,9 @@ app.use(session({
   saveUninitialized: true
 }));
 
+// Routes
+app.use('/', userRoutes);
+
 // Exploitation du dossier public pour les fichiers statiques ( css, img, etc )
 app.use(express.static('public'));
 
