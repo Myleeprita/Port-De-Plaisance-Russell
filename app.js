@@ -3,6 +3,8 @@ const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const path = require('path');
 const userRoutes = require('./routes/userRoutes');
+const catwayRoutes = require('./routes/catwayRoutes');
+const reservationRoutes = require('./routes/reservationRoutes');
 const userModel = require('./models/userModel');
 const session = require('express-session');
 
@@ -38,6 +40,8 @@ app.use(session({
 
 // Routes
 app.use('/', userRoutes);
+app.use("/api", catwayRoutes);
+app.use("/api", reservationRoutes);
 
 // Exploitation du dossier public pour les fichiers statiques ( css, img, etc )
 app.use(express.static('public'));
