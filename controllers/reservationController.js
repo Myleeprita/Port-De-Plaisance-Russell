@@ -1,3 +1,4 @@
+/*
 const fs = require("fs");
 const path = require("path");
 
@@ -85,4 +86,100 @@ exports.deleteReservation = (req, res) => {
 
     writeReservations(filtered);
     res.json({ message: "Réservation supprimée" });
+};
+*/
+
+const reservationService = require("../services/reservationService");
+
+// Créer une réservation
+exports.createReservation = (req, res) => {
+  try {
+    const catwayNumber = parseInt(req.params.catwayNumber);
+    const { clientName, boatName, startDate, endDate } = req.body;
+
+    if (!clientName || !boatName || !startDate || !endDate) {
+      return res.status(400).json({ message: "Tous les champs sont requis" });
+    }
+
+    const newReservation = reservationService.createReservation(catwayNumber, {
+      clientName,
+      boatName,
+      startDate,
+      endDate,
+    });
+
+    res.status(201).json(newReservation);
+  } catch (error) {
+    console.error("Erreur création réservation:", error);
+    res.status(500).json({ message: "Erreur serveur" });
+  }
+};
+
+// Lister l'ensemble des réservations
+exports.getReservationsByCatway = (req, res) => {
+  try {
+    const catwayNumber = parseInt(req.params.catwayNumber);
+    const reservations = reservationService.getReservationsByCatway(catwayNumber);
+    res.json(reservations);
+  } catch (error) {
+    console.error("Erreur récupération réservations:", error);
+    res.status(500).json({ message: "Erreur serveur" });
+  }
+};
+
+// Récupérer les détails d'une réservation en particulier
+exports.getReservationById = (req, res) => {
+  try {
+    const catwayNumber = parseInt(req.params.catwayNumber);
+    const reservationId = parseInt(req.params.reservationId);
+
+    const reservation = reservationService.getReservation(catwayNumber, reservationId);
+
+    if (!reservation) {
+      return res.status(404).json({ message: "Réservation introuvable" });
+    }
+
+    res.json(reservation);
+  } catch (error) {
+    console.error("Erreur récupération réservation:", error);
+    res.status(500).json({ message: "Erreur serveur" });
+  }
+};
+
+// Modifier une réservation
+exports.updateReservation = (req, res) => {
+  try {
+    const catwayNumber = parseInt(req.params.catwayNumber);
+    const newData = req.body;
+
+    const updatedReservation = reservationService.updateReservation(catwayNumber, newData.reservationId, newData);
+
+    if (!updatedReservation) {
+      return res.status(404).json({ message: "Réservation introuvable" });
+    }
+
+    res.json(updatedReservation);
+  } catch (error) {
+    console.error("Erreur mise à jour réservation:", error);
+    res.status(500).json({ message: "Erreur serveur" });
+  }
+};
+
+// Supprimer une réservation
+exports.deleteReservation = (req, res) => {
+  try {
+    const catwayNumber = parseInt(req.params.catwayNumber);
+    const reservationId = parseInt(req.params.reservationId);
+
+    const deleted = reservationService.deleteReservation(catwayNumber, reservationId);
+
+    if (!deleted) {
+      return res.status(404).json({ message: "Réservation introuvable" });
+    }
+
+    res.json({ message: "Réservation supprimée", deleted });
+  } catch (error) {
+    console.error("Erreur suppression réservation:", error);
+    res.status(500).json({ message: "Erreur serveur" });
+  }
 };
