@@ -2,9 +2,6 @@ const express = require('express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const path = require('path');
-const userRoutes = require('./routes/userRoutes');
-const catwayRoutes = require('./routes/catwayRoutes');
-const reservationRoutes = require('./routes/reservationRoutes');
 const userModel = require('./models/userModel');
 const session = require('express-session');
 
@@ -24,6 +21,8 @@ app.set('views', path.join(__dirname, 'views'));
 
 // Middleware JSON
 app.use(express.json());  //Lecture du JSON
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, "public")));
 
 // Middleware Error
 app.use((err, req, res, next) => {
@@ -39,9 +38,15 @@ app.use(session({
 }));
 
 // Routes
-app.use('/', userRoutes);
+const userRoutes = require('./routes/userRoutes');
+const catwayRoutes = require('./routes/catwayRoutes');
+const reservationRoutes = require('./routes/reservationRoutes');
+const pageRoutes = require('./routes/pageRoutes');
+
+app.use("/api", userRoutes);
 app.use("/api", catwayRoutes);
 app.use("/api", reservationRoutes);
+app.use("/", pageRoutes);
 
 // Exploitation du dossier public pour les fichiers statiques ( css, img, etc )
 app.use(express.static('public'));
