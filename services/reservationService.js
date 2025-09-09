@@ -42,6 +42,12 @@ exports.getReservation = (catwayNumber, reservationId) => {
     return data.find(r => r.catwayNumber === parseInt(catwayNumber) && r.reservationId === parseInt(reservationId));
 };
 
+// Récupére toutes les réservations
+exports.getAllReservations = () => {
+    const data = readData();
+    return data;
+};
+
 // Modifier un réservation
 exports.updateReservation = (catwayNumber, newData) => {
     const data = readData();

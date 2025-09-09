@@ -87,14 +87,18 @@ exports.getUserByEmail = async (req, res) => {
 exports.login = async (req, res) => {
     try {
         const { email, password } = req.body;
+        console.log("Tentative de connexion :", email, password);
+
         const user = await userService.getUserByEmail(email);
+        console.log("Utilisateur trouvé :", user);
 
         if (!user || user.password !== password) {
             return res.status(401).json({ message: "Email ou mot de passe incorrect" });
         }
 
         req.session.user = user;
-        res.json({ message: "Connexion réussie" });
+       /* res.json({ message: "Connexion réussie", user }); */
+        res.redirect("/dashboard");
     } catch (error) {
         res.status(500).json({ message: "Erreur serveur", error: error.message });
     }

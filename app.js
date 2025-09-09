@@ -4,8 +4,11 @@ const dotenv = require('dotenv');
 const path = require('path');
 const userModel = require('./models/userModel');
 const session = require('express-session');
+const bodyParser = require("body-parser");
+
 
 const app = express();
+
 
 // Charge Environnement
 dotenv.config();
@@ -37,14 +40,17 @@ app.use(session({
   saveUninitialized: true
 }));
 
+app.use(bodyParser.urlencoded({ extended: true })); // pour formulaires HTML
+app.use(bodyParser.json()); // pour requêtes JSON (Postman)
+
 // Routes
 const userRoutes = require('./routes/userRoutes');
 const catwayRoutes = require('./routes/catwayRoutes');
 const reservationRoutes = require('./routes/reservationRoutes');
 const pageRoutes = require('./routes/pageRoutes');
 
-app.use("/api", userRoutes);
-app.use("/api", catwayRoutes);
+app.use("/", userRoutes);
+app.use("/catway", catwayRoutes);
 app.use("/api", reservationRoutes);
 app.use("/", pageRoutes);
 
@@ -60,6 +66,7 @@ app.get('/', async (req, res) => {
         res.status(500).send('Erreur serveur');
     }
 });
+
 
 // Lancer Serveur
 const PORT = process.env.PORT || 5000;

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Tableau de Bord </title>
+</head>
+<body>
+    <%- include("partials/header")%>
+
+      <h1>Tableau de Bord</h1>
+  <p>Utilisateur connecté : <%= user.name %> (<%= user.email %>)</p>
+  <p>Date du jour : <%= today %></p>
+
+  <h2>Réservations en cours</h2>
+  <table border="1">
+    <tr>
+      <th>Catway</th>
+      <th>Client</th>
+      <th>Bateau</th>
+      <th>Début</th>
+      <th>Fin</th>
+    </tr>
+    <% reservations.forEach(r => { %>
+      <tr>
+        <td><%= r.catwayNumber %></td>
+        <td><%= r.clientName %></td>
+        <td><%= r.boatName %></td>
+        <td><%= new Date(r.startDate).toLocaleDateString() %></td>
+        <td><%= new Date(r.endDate).toLocaleDateString() %></td>
+      </tr>
+    <% }) %>
+  </table>
+</body>
+</html>
+</body>
+</html>

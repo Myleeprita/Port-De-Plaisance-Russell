@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const reservationService = require("../services/reservationService")
 
 // Accueil avec la présentation + formulaire de connexion
 router.get("/", (req, res) => {
@@ -9,16 +10,17 @@ router.get("/", (req, res) => {
 
 // Dashboard ( Tableau de Bord )
 router.get("/dashboard", (req, res) => {
-    const user = { name: "John Doe", email: "john@test.com" };
-    const today = new Date().toLocaleDateString("fr-FR");
+  if (!req.session.user) {
+    return res.redirect("/"); // sécurité : redirection si pas connecté
+  }
 
-    // Exemple de réservations en cours
-    const reservations = [
-        { id: 1, client: "Martin", bateau: "Excellior", date: "28/08/2025" },
-        { id: 2, client: "Sophie", bateau: "Volcan", date: "01/09/2025" },
-    ];
+  const reservations = reservationService.getAllReservations(); // récupération depuis JSON
 
-    res.render("dashboard", { user, today, reservations });
+  res.render("dashboard", {
+    user: req.session.user,
+    reservations: reservations,
+    today: new Date().toLocaleDateString("fr-FR")
+  });
 });
 
 
